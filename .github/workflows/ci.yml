@@ -13,3 +13,12 @@ jobs:
           cache: maven
       - name: Validate, build and run tests
         run: mvn --batch-mode --update-snapshots verify
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
+      - uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'staging/*.jar'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
